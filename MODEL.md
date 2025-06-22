@@ -1,89 +1,193 @@
-Tuyệt vời! Dựa trên các tính năng của CourtSense, tôi sẽ mô tả chi tiết kiểu dữ liệu cho từng phần, giải thích vai trò và các thuộc tính chính mà không dùng code blocks hay cấu trúc README.md.
+📚 Cấu Trúc Dữ Liệu Ứng Dụng CourtSense
+Tài liệu này mô tả chi tiết các kiểu dữ liệu chính (models) và đối tượng quản lý dữ liệu được sử dụng trong ứng dụng CourtSense: Phân Tích & Huấn Luyện Bóng Rổ Cá Nhân. Việc định nghĩa rõ ràng các cấu trúc này là nền t tảng cho việc quản lý trạng thái, lưu trữ thông tin và xây dựng các tính năng phức tạp của ứng dụng.
 
-📚 Mô Tả Kiểu Dữ Liệu Ứng Dụng CourtSense
-Để xây dựng một ứng dụng phức tạp như CourtSense, việc định nghĩa rõ ràng các "khối xây dựng" dữ liệu là cực kỳ quan trọng. Dưới đây là mô tả về các kiểu dữ liệu (chủ yếu là struct và class) mà ứng dụng sẽ sử dụng.
+I. Các Kiểu Dữ Liệu Chính (Models - struct)
+Các kiểu dữ liệu này đại diện cho các thực thể cụ thể trong ứng dụng và thường sẽ tuân thủ các giao thức như Identifiable (để sử dụng với ForEach, List trong SwiftUI) và Codable (để lưu trữ hoặc trao đổi dữ liệu).
 
-1. Người Dùng (User)
-Kiểu dữ liệu này lưu trữ toàn bộ thông tin cá nhân của người dùng ứng dụng. Đây là nguồn chân lý cho mọi thứ liên quan đến tài khoản cá nhân.
+1. User (Hồ Sơ Người Dùng)
+Mô hình lưu trữ thông tin cá nhân của người dùng.
 
-Định danh duy nhất (id): Một mã số đặc biệt (thường là UUID) để phân biệt mỗi người dùng.
-Tên (name): Tên đầy đủ hoặc tên hiển thị của người dùng.
-Email (email): Địa chỉ email dùng để đăng nhập hoặc liên hệ.
-Chiều cao (heightCm): Chiều cao của người dùng theo centimet (có thể không bắt buộc).
-Cân nặng (weightKg): Cân nặng của người dùng theo kilogram (có thể không bắt buộc).
-Cấp độ kỹ năng (skillLevel): Một kiểu dữ liệu riêng biệt (ví dụ: enum) để phân loại trình độ bóng rổ của người dùng (Ví dụ: "Người mới", "Trung bình", "Nâng cao", "Chuyên nghiệp"). Điều này giúp ứng dụng cá nhân hóa nội dung.
-URL ảnh đại diện (profileImageURL): Đường dẫn đến ảnh hồ sơ của người dùng, thường là ảnh được lưu trữ trên đám mây.
-Thời lượng tập luyện ưa thích (preferredWorkoutDurationMinutes): Số phút mà người dùng muốn dành cho một buổi tập, giúp AI đề xuất các bài tập phù hợp.
-2. Bài Tập (Exercise)
-Đây là định nghĩa cho một bài tập bóng rổ cụ thể mà người dùng có thể thực hiện (ví dụ: "Ném rổ tự do", "Rê bóng chéo chân").
+id: Kiểu UUID. Một mã định danh duy nhất cho mỗi người dùng.
 
-Định danh duy nhất (id): Mã số riêng cho từng bài tập.
-Tên (name): Tên ngắn gọn của bài tập.
-Mô tả (description): Hướng dẫn chi tiết về cách thực hiện bài tập.
-Loại bài tập (exerciseType): Một kiểu dữ liệu riêng biệt (ví dụ: enum) để phân loại bài tập (Ví dụ: "Ném rổ", "Dẫn bóng", "Phòng thủ", "Thể lực"). Giúp dễ dàng tìm kiếm và sắp xếp.
-Mục tiêu lặp/thời lượng (targetRepsOrDuration): Con số mục tiêu cho bài tập này, có thể là số lần lặp (ví dụ: 20 cú ném) hoặc thời lượng (ví dụ: 120 giây).
-URL video hướng dẫn (videoURL): Đường dẫn đến video mẫu minh họa bài tập.
-Bật/tắt phân tích AI (aiAnalysisEnabled): Một giá trị Boolean cho biết liệu AI có nên phân tích động tác cho bài tập này hay không.
-Mục tiêu phân tích AI (aiAnalysisTarget): Một danh sách các khía cạnh cụ thể mà AI cần tập trung vào khi phân tích (Ví dụ: "Tư thế ném", "Góc khuỷu tay", "Vị trí chân"). Điều này cực kỳ quan trọng cho tính năng AI nâng cao.
-3. Chương Trình Tập Luyện (Workout)
-Kiểu dữ liệu này đại diện cho một kế hoạch tập luyện hoàn chỉnh, bao gồm một chuỗi các bài tập cụ thể.
+name: Kiểu String. Tên hiển thị của người dùng.
 
-Định danh duy nhất (id): Mã số riêng cho từng chương trình.
-Tên (name): Tên của chương trình tập luyện (ví dụ: "Chương trình ném rổ cơ bản", "Thử thách rê bóng").
-Mô tả (description): Mô tả tổng quan về mục tiêu và nội dung của chương trình.
-Danh sách các bài tập (exercises): Một mảng chứa các đối tượng Exercise, xác định thứ tự và nội dung của chương trình.
-Thời lượng ước tính (estimatedDurationMinutes): Giá trị tự động tính toán tổng thời lượng dự kiến của cả chương trình, dựa trên thời lượng của các bài tập con.
-Ngày tạo (createdAt): Thời điểm chương trình này được tạo ra.
-4. Kết Quả Phân Tích AI (AIAnalysisResult)
-Mỗi khi AI phân tích một khía cạnh cụ thể của động tác trong một bài tập, kết quả sẽ được lưu trữ trong kiểu dữ liệu này.
+email: Kiểu String. Địa chỉ email dùng để đăng nhập.
 
-Định danh duy nhất (id): Mã số riêng cho từng kết quả phân tích.
-Mục tiêu phân tích (target): Khía cạnh cụ thể của động tác mà kết quả này đề cập (ví dụ: "Tư thế ném", "Góc khuỷu tay").
-Điểm số (score): Một giá trị số (ví dụ: từ 0 đến 100) thể hiện mức độ chính xác của động tác theo đánh giá của AI.
-Phản hồi văn bản (feedback): Một chuỗi văn bản cung cấp phản hồi cụ thể, chi tiết từ AI (ví dụ: "Đầu gối chưa đủ thấp", "Thả tay đúng thời điểm hơn").
-Thời điểm (timestamp): Thời gian chính xác khi phân tích này được thực hiện (quan trọng cho phản hồi thời gian thực).
-URL ảnh/video nhỏ (thumbnailUrl): Đường dẫn đến một khung hình hoặc đoạn video ngắn tại khoảnh khắc phân tích, giúp người dùng xem lại.
-5. Hiệu Suất Bài Tập (ExercisePerformance)
-Khi người dùng hoàn thành một bài tập trong một buổi tập, kiểu dữ liệu này sẽ ghi lại hiệu suất cụ thể của họ cho bài tập đó.
+heightCm: Kiểu Double?. Chiều cao của người dùng tính bằng centimet (tùy chọn).
 
-Định danh duy nhất (id): Mã số riêng cho mỗi lần thực hiện bài tập.
-ID bài tập (exerciseId): Liên kết đến id của Exercise mà người dùng đã thực hiện.
-Số lần/thời lượng thực tế (actualRepsOrDuration): Số lần lặp hoặc thời lượng thực tế mà người dùng đã hoàn thành.
-Điểm tổng thể (score): Điểm số tổng hợp cho toàn bộ bài tập này, có thể được tính toán từ các AIAnalysisResult.
-Độ chính xác (accuracy): Một giá trị phần trăm hoặc tỷ lệ (ví dụ: 85% cú ném thành công).
-Kết quả phân tích AI (analysisResults): Một mảng chứa các đối tượng AIAnalysisResult, cung cấp chi tiết về phân tích AI cho từng động tác trong bài tập này.
-URL ghi hình (videoRecordingURL): Đường dẫn đến video ghi lại quá trình người dùng thực hiện bài tập (nếu tính năng ghi hình được bật).
-6. Phiên Tập Luyện (WorkoutSession)
-Đây là kiểu dữ liệu ghi lại một buổi tập luyện hoàn chỉnh mà người dùng đã hoàn thành. Đây là nơi tập hợp tất cả dữ liệu lịch sử.
+weightKg: Kiểu Double?. Cân nặng của người dùng tính bằng kilogram (tùy chọn).
 
-Định danh duy nhất (id): Mã số riêng cho từng phiên tập.
-ID chương trình (workoutId): Liên kết đến id của Workout nếu phiên tập này dựa trên một chương trình cụ thể (có thể trống nếu là tập tự do).
-ID người dùng (userId): Liên kết đến id của User đã thực hiện phiên tập.
-Ngày/giờ (date): Thời điểm chính xác buổi tập diễn ra.
-Tổng thời lượng (durationMinutes): Tổng số phút của toàn bộ phiên tập.
-Điểm tổng thể (totalScore): Điểm số tổng hợp cho toàn bộ phiên tập.
-Hiệu suất các bài tập (exercisePerformances): Một mảng chứa các đối tượng ExercisePerformance, ghi lại hiệu suất của từng bài tập con trong phiên này.
-Ghi chú (notes): Trường văn bản cho phép người dùng thêm ghi chú cá nhân về buổi tập.
-7. Chỉ Số Thống Kê (Stat)
-Kiểu dữ liệu này đại diện cho các chỉ số hiệu suất tổng hợp hoặc cụ thể mà người dùng có thể theo dõi (ví dụ: "Tỷ lệ ném 3 điểm", "Số buổi tập hàng tuần"). Dữ liệu này thường được tính toán từ WorkoutSession lịch sử.
+skillLevel: Kiểu SkillLevel (enum). Cấp độ kỹ năng bóng rổ của người dùng.
 
-Định danh duy nhất (id): Mã số riêng cho từng chỉ số.
-Tên chỉ số (name): Tên mô tả chỉ số (ví dụ: "Tỷ lệ ném rổ thành công", "Số lần squat đúng kỹ thuật").
-Giá trị (value): Giá trị hiện tại của chỉ số (ví dụ: 85.5, 3).
-Đơn vị (unit): Đơn vị đo lường của giá trị (ví dụ: "%", "lần", "phút").
-Xu hướng (trend): Một kiểu dữ liệu riêng biệt (ví dụ: enum) mô tả sự thay đổi của chỉ số theo thời gian (Ví dụ: "Đang cải thiện", "Đang giảm", "Ổn định").
-Cập nhật lần cuối (lastUpdated): Thời điểm chỉ số này được tính toán hoặc cập nhật gần nhất.
-8. Đối Tượng Quản Lý Dữ Liệu (ObservableObject Classes)
-Để chia sẻ và quản lý các bộ sưu tập dữ liệu lớn hoặc trạng thái chung của ứng dụng một cách hiệu quả, chúng ta sẽ sử dụng các class tuân thủ giao thức ObservableObject với các thuộc tính được đánh dấu @Published.
+profileImageURL: Kiểu URL?. Đường dẫn đến ảnh đại diện của người dùng (tùy chọn).
 
-UserManager:
+preferredWorkoutDurationMinutes: Kiểu Int. Thời lượng tập luyện ưa thích của người dùng tính bằng phút.
 
-Quản lý đối tượng User hiện tại của ứng dụng.
-Có thể chứa các cài đặt ứng dụng chung (ví dụ: App Setting với các thuộc tính như enableNotifications, theme).
-Khi thông tin User hoặc cài đặt thay đổi, các phần giao diện liên quan sẽ tự động cập nhật.
-WorkoutManager:
+SkillLevel (Enum)
+Đại diện cho các cấp độ kỹ năng bóng rổ.
 
-Quản lý danh sách các chương trình tập luyện có sẵn (availableWorkouts).
-Quản lý lịch sử tất cả các phiên tập luyện đã hoàn thành của người dùng (workoutHistory).
-Các phương thức để thêm, xóa, hoặc cập nhật chương trình/phiên tập.
-Các đối tượng này sẽ được cung cấp cho toàn bộ ứng dụng thông qua @EnvironmentObject, giúp tránh việc truyền dữ liệu thủ công qua nhiều lớp View.
+Các giá trị: beginner (Người mới), intermediate (Trung bình), advanced (Nâng cao), professional (Chuyên nghiệp).
+
+Tuân thủ: String, Codable, CaseIterable, Identifiable.
+
+2. Exercise (Bài Tập)
+Định nghĩa một bài tập bóng rổ cụ thể.
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi bài tập.
+
+name: Kiểu String. Tên của bài tập (ví dụ: "Ném Rổ Tự Do", "Rê Bóng Chéo Chân").
+
+description: Kiểu String. Mô tả chi tiết cách thực hiện bài tập.
+
+exerciseType: Kiểu ExerciseType (enum). Phân loại bài tập (ví dụ: "Ném rổ", "Dẫn bóng", "Phòng thủ", "Thể lực").
+
+targetRepsOrDuration: Kiểu Int. Mục tiêu số lần lặp (reps) hoặc thời lượng (giây) cho bài tập.
+
+videoURL: Kiểu URL?. Đường dẫn đến video hướng dẫn bài tập (tùy chọn).
+
+aiAnalysisEnabled: Kiểu Bool. Cho biết AI có phân tích động tác cho bài tập này không.
+
+aiAnalysisTarget: Kiểu [AIAnalysisTarget] (enum). Danh sách các khía cạnh AI cần phân tích trong động tác.
+
+ExerciseType (Enum)
+Phân loại các bài tập.
+
+Các giá trị: shooting (Ném rổ), dribbling (Dẫn bóng), defense (Phòng thủ), conditioning (Thể lực), other (Khác).
+
+Tuân thủ: String, Codable, CaseIterable, Identifiable.
+
+AIAnalysisTarget (Enum)
+Các điểm hoặc khía cạnh cụ thể mà AI sẽ phân tích trong động tác.
+
+Các giá trị: shootingForm (Tư thế ném), elbowAngle (Góc khuỷu tay), legPosition (Vị trí chân), dribbleHeight (Độ cao dẫn bóng), bodyBalance (Thăng bằng cơ thể), stepFootwork (Tư thế chân bước).
+
+Tuân thủ: String, Codable, CaseIterable, Identifiable.
+
+3. Workout (Chương Trình Tập Luyện)
+Một kế hoạch tập luyện bao gồm một chuỗi các bài tập.
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi chương trình tập luyện.
+
+name: Kiểu String. Tên của chương trình (ví dụ: "Chương Trình Ném Rổ Cơ Bản").
+
+description: Kiểu String. Mô tả tổng quan về chương trình.
+
+exercises: Kiểu [Exercise]. Một mảng chứa các đối tượng Exercise trong chương trình.
+
+estimatedDurationMinutes: Kiểu Int. Thời lượng ước tính của cả chương trình (tính toán tự động từ các bài tập con).
+
+createdAt: Kiểu Date. Ngày tạo chương trình.
+
+4. AIAnalysisResult (Kết Quả Phân Tích AI)
+Chi tiết kết quả phân tích AI cho một khía cạnh cụ thể của động tác.
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi kết quả phân tích.
+
+target: Kiểu AIAnalysisTarget (enum). Khía cạnh được phân tích (ví dụ: tư thế ném).
+
+score: Kiểu Double. Điểm số định lượng (ví dụ: 0.0 - 1.0 hoặc 0 - 100) cho độ chính xác.
+
+feedback: Kiểu String. Phản hồi bằng văn bản từ AI (ví dụ: "Cần hạ thấp đầu gối hơn").
+
+timestamp: Kiểu Date. Thời điểm phân tích được thực hiện.
+
+thumbnailUrl: Kiểu URL?. Đường dẫn đến ảnh/video thumbnail của khoảnh khắc phân tích (tùy chọn).
+
+5. ExercisePerformance (Hiệu Suất Bài Tập)
+Ghi lại hiệu suất của một bài tập đơn lẻ trong một phiên tập luyện.
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi bản ghi hiệu suất.
+
+exerciseId: Kiểu UUID. Liên kết đến ID của bài tập đã thực hiện.
+
+actualRepsOrDuration: Kiểu Int. Số lần lặp hoặc thời lượng thực tế đã hoàn thành.
+
+score: Kiểu Double. Điểm tổng thể cho bài tập này.
+
+accuracy: Kiểu Double?. Độ chính xác (ví dụ: tỷ lệ ném rổ thành công), tùy chọn.
+
+analysisResults: Kiểu [AIAnalysisResult]. Một mảng chứa các kết quả phân tích AI chi tiết cho bài tập này.
+
+videoRecordingURL: Kiểu URL?. Đường dẫn đến video ghi lại buổi tập (tùy chọn).
+
+6. WorkoutSession (Phiên Tập Luyện)
+Ghi lại một buổi tập luyện hoàn chỉnh đã được thực hiện.
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi phiên tập.
+
+workoutId: Kiểu UUID?. Liên kết đến ID của chương trình tập luyện đã sử dụng (tùy chọn, nếu là tập tự do).
+
+userId: Kiểu UUID. Liên kết đến ID của người dùng đã thực hiện phiên tập.
+
+date: Kiểu Date. Ngày và giờ thực hiện phiên tập.
+
+durationMinutes: Kiểu Int. Tổng thời lượng của phiên tập tính bằng phút.
+
+totalScore: Kiểu Double. Điểm tổng thể của phiên tập.
+
+exercisePerformances: Kiểu [ExercisePerformance]. Một mảng chứa các bản ghi hiệu suất của từng bài tập trong phiên.
+
+notes: Kiểu String?. Ghi chú thêm của người dùng về buổi tập (tùy chọn).
+
+7. Stat (Chỉ Số Thống Kê)
+Đại diện cho các chỉ số hiệu suất tổng hợp hoặc cụ thể được hiển thị trong tab "Thống Kê".
+
+id: Kiểu UUID. Mã định danh duy nhất cho mỗi chỉ số.
+
+name: Kiểu String. Tên chỉ số (ví dụ: "Tỷ lệ ném 3 điểm", "Số buổi tập hàng tuần").
+
+value: Kiểu Double. Giá trị hiện tại của chỉ số.
+
+unit: Kiểu String. Đơn vị đo lường của giá trị (ví dụ: "%", "lần", "phút").
+
+trend: Kiểu Trend (enum). Xu hướng của chỉ số theo thời gian (tăng, giảm, ổn định).
+
+lastUpdated: Kiểu Date. Thời điểm chỉ số này được tính toán/cập nhật cuối cùng.
+
+Trend (Enum)
+Mô tả xu hướng của một chỉ số.
+
+Các giá trị: improving (Đang cải thiện), declining (Đang giảm), stable (Ổn định).
+
+Tuân thủ: String, Codable.
+
+II. Các Đối Tượng Quản Lý Dữ Liệu (Managers - class ObservableObject)
+Các class này sẽ đóng vai trò là "người quản lý" các bộ sưu tập dữ liệu lớn và chia sẻ trạng thái ứng dụng tới các View bằng @EnvironmentObject. Chúng sử dụng @Published để thông báo khi dữ liệu thay đổi.
+
+1. UserManager
+Quản lý thông tin và cài đặt của người dùng hiện tại.
+
+currentUser: Kiểu User?. Đối tượng người dùng hiện tại đang đăng nhập.
+
+appSettings: Kiểu AppSettings. Các cài đặt chung của ứng dụng (ví dụ: bật/tắt thông báo, chủ đề giao diện).
+
+AppSettings (Struct): enableNotifications (Bool), theme (AppTheme enum).
+
+AppTheme (Enum)
+Đại diện cho chủ đề giao diện ứng dụng.
+
+Các giá trị: light (Sáng), dark (Tối), system (Hệ thống).
+
+Tuân thủ: String, Codable, CaseIterable, Identifiable.
+
+2. WorkoutManager
+Quản lý danh sách các chương trình tập luyện và lịch sử các phiên tập luyện của người dùng.
+
+availableWorkouts: Kiểu [Workout]. Một mảng chứa tất cả các chương trình tập luyện có sẵn trong ứng dụng.
+
+workoutHistory: Kiểu [WorkoutSession]. Một mảng chứa lịch sử tất cả các phiên tập luyện mà người dùng đã hoàn thành.
+
+III. Mối Quan Hệ Giữa Các Kiểu Dữ Liệu
+Một User có thể có nhiều WorkoutSession.
+
+Một Workout bao gồm một hoặc nhiều Exercise.
+
+Một WorkoutSession chứa kết quả của một hoặc nhiều ExercisePerformance.
+
+Mỗi ExercisePerformance lại có một hoặc nhiều AIAnalysisResult.
+
+UserManager quản lý một đối tượng User duy nhất.
+
+WorkoutManager quản lý các bộ sưu tập Workout và WorkoutSession.
+
+Cấu trúc dữ liệu này được thiết kế để dễ dàng mở rộng, lưu trữ hiệu quả với SwiftData (hoặc Core Data) và tương tác liền mạch với giao diện SwiftUI.
